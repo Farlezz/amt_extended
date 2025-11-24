@@ -74,11 +74,14 @@ Requires MTA:SA 1.5+, Editor, and EDF resource.
 
 ## License
 
-As per the original author (Arezu): *"You are free to edit this 'spaghetti' code if you include credits."*
+As per the original author (Arezu):
+> *"You are free to edit this 'spaghetti' code if you include credits."*
 
 AMT Extended follows the same terms - free to use and modify as long as you keep the credits chain intact:
-- Original AMT by ~pS|Arezu and ~pS|Rextox
-- gute_amt improvements by Zeet
-- AMT Extended refactor by farlezz
 
-If you fork this, just mention it's based on AMT Extended → gute_amt → original AMT.
+**Credits Chain:**
+- **Original AMT** by ~pS|Arezu and ~pS|Rextox
+- **gute_amt** improvements by Zeet
+- **AMT Extended** refactor and enhancements by farlezz
+
+If you fork this, just mention it's based on: **AMT Extended** → **gute_amt** → **original AMT**
