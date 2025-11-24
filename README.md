@@ -7,13 +7,13 @@
 
 ## What Changed
 
-I took the original AMT and completely rewrote it to be easier to maintain. Here's what's different:
+The original AMT was completely refactored to be easier to maintain. Here's what's different:
 
 ### The Refactor
 
 The original AMT was 3 files with almost 2,000 lines of code. A lot of it was duplicated - the same geometry calculations appeared twice (once for preview, once for generation). This made it hard to fix bugs because you had to change things in two places.
 
-I split everything into 14 smaller files and moved the shared code into modules that both client and server can use. The result:
+Everything got split into 14 smaller files with shared code moved into modules that both client and server can use. The result:
 - **-568 lines** of duplicated code gone
 - **-17%** total code size (1,979 → 1,650 lines)
 - **Much easier** to find and fix things
@@ -26,6 +26,7 @@ amt_extended/
 ├── server/          # 2 modules for generation and duplication
 ├── shared/          # 4 utilities used by both client and server
 ├── record/          # Recording system (unchanged)
+├── original_amt/    # Kept the original for reference
 └── meta.xml
 ```
 
@@ -37,6 +38,8 @@ Things that weren't in the original:
 
 - **Curved Loop Mode** - New "Twist Rotation" controls for making banked loops and curved tracks
 - **Preview Limits** - Shows a warning when you're generating >500 objects, with a "Show All" button if you really want to see them
+- **Workflow Highlighting** - UI changes color to show what mode you're in
+- **Version Number** - Shows in the bottom-left corner
 - **Bug Fixes** - Fixed some preview/generation mismatch issues
 
 ### Everything Else Still Works
@@ -67,7 +70,7 @@ Requires MTA:SA 1.5+, Editor, and EDF resource.
 *   **Zeet** - Added preview features and improvements (didn't want credit but too bad)
 
 ### AMT Extended
-*   **farlezz** - this
+*   **farlezz** - this (vibecoded with my LLM homies - told them what to do, they did the heavy lifting)
 
 ## License
 
