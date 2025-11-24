@@ -26,7 +26,6 @@ amt_extended/
 ├── server/          # 2 modules for generation and duplication
 ├── shared/          # 4 utilities used by both client and server
 ├── record/          # Recording system (unchanged)
-├── original_amt/    # Kept the original for reference
 └── meta.xml
 ```
 
