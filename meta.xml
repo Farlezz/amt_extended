@@ -1,0 +1,31 @@
+<meta>
+	<info author="Arezu" version="1.0.0" type="script" name="AMT Extended" description="Arezu's Mapping Toolbox - Extended Edition" />
+
+	<!-- Shared modules (used by both client and server) -->
+	<script src="shared/constants.lua" type="shared" />
+	<script src="shared/math_helpers.lua" type="shared" />
+	<script src="shared/transforms.lua" type="shared" />
+	<script src="shared/geometry_calculator.lua" type="shared" />
+
+	<!-- Client modules -->
+	<script src="client/gui_helpers.lua" type="client" />
+	<script src="client/gui_init.lua" type="client" />
+	<script src="client/element_selection.lua" type="client" />
+	<script src="client/gui_generator.lua" type="client" />
+	<script src="client/gui_preview.lua" type="client" />
+	<script src="client/element_manipulation.lua" type="client" />
+	<script src="client/gui_events.lua" type="client" />
+
+	<!-- Server modules -->
+	<script src="server/generation.lua" type="server" />
+	<script src="server/duplication.lua" type="server" />
+
+	<!-- Recording utility -->
+	<script src="record/record_c.lua" type="client" />
+
+	<!-- Resources -->
+	<file src="img/cimg.png" />
+	<file src="img/generator_background.png" />
+	<file src="font/bumped.ttf" />
+	<file src="font/Arialic Hollow.ttf" />
+</meta>
