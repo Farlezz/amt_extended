@@ -26,7 +26,6 @@ amt_extended/
 ├── server/          # 2 modules for generation and duplication
 ├── shared/          # 4 utilities used by both client and server
 ├── record/          # Recording system (unchanged)
-├── original_amt/    # Kept the original for reference
 └── meta.xml
 ```
 
@@ -38,8 +37,6 @@ Things that weren't in the original:
 
 - **Curved Loop Mode** - New "Twist Rotation" controls for making banked loops and curved tracks
 - **Preview Limits** - Shows a warning when you're generating >500 objects, with a "Show All" button if you really want to see them
-- **Workflow Highlighting** - UI changes color to show what mode you're in
-- **Version Number** - Shows in the bottom-left corner
 - **Bug Fixes** - Fixed some preview/generation mismatch issues
 
 ### Everything Else Still Works
