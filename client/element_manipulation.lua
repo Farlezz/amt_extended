@@ -54,7 +54,7 @@ addEventHandler("onClientRender", getRootElement(),
 function()
 	if #AMT.hElements == 0 or AMT.generate then return end
 
-	if not isElementStreamedIn(AMT.hElements[1].source) then return end
+	if not isElement(AMT.hElements[1].source) or not isElementStreamedIn(AMT.hElements[1].source) then return end
 	local nx, ny, nz = getElementPosition(AMT.hElements[1].source)
 	local rotate = {}
 	rotate.slow = "lalt"
