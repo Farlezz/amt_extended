@@ -68,6 +68,7 @@ Requires MTA:SA 1.5+, Editor, and EDF resource.
 
 ### AMT Extended
 *   **farlezz** - this (vibecoded with my LLM homies - told them what to do, they did the heavy lifting)
+*   **Corrupt** - tested the tool and provided invaluable feedback (also might've had the original idea for this but we're still arguing about that)
 
 ## License
 
