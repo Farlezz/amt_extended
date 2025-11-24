@@ -148,7 +148,9 @@ addEvent("requestDestroyElements", true)
 addEventHandler("requestDestroyElements", getRootElement(),
 function(elements)
 	for i = 1, #elements do
-		destroyElement(elements[i])
+		if isElement(elements[i]) then
+			destroyElement(elements[i])
+		end
 	end
 end)
 

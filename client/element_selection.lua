@@ -233,10 +233,30 @@ function()
 			end
 		end
 		AMT.isHoveringArrow = isHoveringAny
+
+		-- NEW: Check for "Save & Generate" condition
+		-- If we are in "Save" mode (AMT.generate == false) and have generated elements
+		if not AMT.generate and AMT.hElements and #AMT.hElements > 0 then
+			local currentText = guiGetText(AMT.gui.gen_button)
+			-- If the currently selected element is DIFFERENT from the one we generated off of
+			if AMT.selectedElement ~= AMT.hElements[1].source then
+				-- We are in "Save & Generate" mode
+				if currentText ~= "Save & Generate" then
+					guiSetText(AMT.gui.gen_button, "Save & Generate")
+				end
+			else
+				-- We are still on the original element, so just "Save"
+				if currentText ~= "Save" then
+					guiSetText(AMT.gui.gen_button, "Save")
+				end
+				-- Clear any previews from other objects
+				clearPreviews()
+			end
+		end
 	end
 
 	-- Check if selected element has moved or rotated and update preview if needed
-	if(AMT.selectedElement and AMT.generate and AMT.currentWindow == 1 and guiGetVisible(AMT.gui[AMT.currentWindow].window))then
+	if(AMT.selectedElement and AMT.currentWindow == 1 and guiGetVisible(AMT.gui[AMT.currentWindow].window))then
 		local currentX, currentY, currentZ = getElementPosition(AMT.selectedElement)
 		local currentRotX, currentRotY, currentRotZ = getElementRotation(AMT.selectedElement)
 		local needsUpdate = false

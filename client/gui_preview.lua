@@ -35,7 +35,16 @@ end
 
 function previewUpdate()
 	-- Defensive guard: only generate previews when Generator window (1) is visible
-	if not AMT.generate or AMT.currentWindow ~= 1 or not guiGetVisible(AMT.gui[AMT.currentWindow].window) then return end
+	if AMT.currentWindow ~= 1 or not guiGetVisible(AMT.gui[AMT.currentWindow].window) then return end
+	
+	-- NEW: Don't show preview if we're in Save mode on the SAME base object
+	-- Preview should only show when selecting a DIFFERENT object (for Save & Generate)
+	if not AMT.generate and AMT.hElements and #AMT.hElements > 0 then
+		if AMT.selectedElement == AMT.hElements[1].source then
+			-- We're still on the original object, don't show preview
+			return
+		end
+	end
 	
 	-- Kill any existing coroutine to restart generation
 	previewCoroutine = coroutine.create(previewGeneratorCoroutine)
@@ -250,7 +259,14 @@ end)
 -- Render the preview path
 addEventHandler("onClientRender", root, function()
 	-- Defensive guard: only render when Generator window (1) is visible and preview is active
-	if not AMT.generate or AMT.currentWindow ~= 1 or not guiGetVisible(AMT.gui[AMT.currentWindow].window) then return end
+	if AMT.currentWindow ~= 1 or not guiGetVisible(AMT.gui[AMT.currentWindow].window) then return end
+	
+	-- NEW: Don't render preview path if we're in Save mode on the SAME base object
+	if not AMT.generate and AMT.hElements and #AMT.hElements > 0 then
+		if AMT.selectedElement == AMT.hElements[1].source then
+			return
+		end
+	end
 
 	if #previewPathPoints > 1 then
 		for i = 1, #previewPathPoints - 1 do

@@ -38,8 +38,9 @@ function updateAutocount()
 	if(AMT.selectedElement == nil or not guiCheckBoxGetSelected(AMT.gui.objects_auto_box))then return end
 	local radius = tonumber(guiGetText(AMT.gui.radius_field))
 	local objects = tonumber(guiGetText(AMT.gui.objects_field))
-	local offset = tonumber(guiGetText(AMT.gui.offset_field))/objects
-	if not radius or not offset then return end
+	local offsetValue = tonumber(guiGetText(AMT.gui.offset_field))
+	if not radius or not objects or not offsetValue or objects == 0 then return end
+	local offset = offsetValue / objects
 	local side = "x"
 	local center = AMT.img[AMT.selectedElement].selectedCenter
 	local dir = AMT.img[AMT.selectedElement].selectedDir
@@ -240,6 +241,16 @@ function startGenerating()
 		guiSetEnabled(AMT.gui.gen_button, false)
 		guiSetText(AMT.gui.gen_button, "Generating...")
 	else
+		-- Logic for "Save" or "Save & Generate"
+		
+		-- Check if we are in "Save & Generate" mode
+		-- This happens if we have generated elements (AMT.hElements) but the user has selected a NEW base element
+		local isSaveAndGenerate = false
+		if AMT.hElements and #AMT.hElements > 0 and AMT.selectedElement ~= AMT.hElements[1].source then
+			isSaveAndGenerate = true
+			outputDebugString("AMT: Detected Save & Generate mode")
+		end
+
 		outputDebugString("AMT: saving...")
 		if not AMT.hElements or #AMT.hElements == 0 then
 			outputDebugString("AMT ERROR: No elements to save!", 1)
@@ -270,5 +281,11 @@ function startGenerating()
 
 		-- Switch back to preview/generate mode (updates button text and highlighting)
 		GUIBuilder.setGenerateMode(true)
+		
+		-- If we were in "Save & Generate" mode, immediately trigger generation for the new element
+		if isSaveAndGenerate then
+			outputDebugString("AMT: Triggering immediate generation for new element...")
+			startGenerating()
+		end
 	end
 end
