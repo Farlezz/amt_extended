@@ -37,6 +37,7 @@ All the global variables are now properly namespaced under `AMT.*` instead of fl
 Things that weren't in the original:
 
 - **Curved Loop Mode** - New "Twist Rotation" controls for making banked loops and curved tracks
+- **Preview Changes** - If the preview has more than 500 objects it will be displayed in a more *not-PC-crashing* way
 - **Bug Fixes** - Fixed some preview/generation mismatch issues
 
 ### Everything Else Still Works
