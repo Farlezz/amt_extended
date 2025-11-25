@@ -259,6 +259,20 @@ function GUIBuilder.setGenerateMode(isGenerateMode)
 
 	-- Update highlighting
 	GUIBuilder.updateWorkflowHighlighting(isGenerateMode)
+
+	-- Re-enable curve rotation (twist) fields when switching back to generate mode
+	-- These fields are disabled during generation and need to be unlocked on undo/save
+	if isGenerateMode then
+		if AMT.gui.twist_rotX_field then
+			guiSetEnabled(AMT.gui.twist_rotX_field, true)
+		end
+		if AMT.gui.twist_rotY_field then
+			guiSetEnabled(AMT.gui.twist_rotY_field, true)
+		end
+		if AMT.gui.twist_rotZ_field then
+			guiSetEnabled(AMT.gui.twist_rotZ_field, true)
+		end
+	end
 end
 
 -- Return the GUIBuilder table for use in other files
