@@ -247,15 +247,8 @@ function startGenerating()
 		guiSetEnabled(AMT.gui.gen_button, false)
 		guiSetText(AMT.gui.gen_button, "Generating...")
 	else
-		-- Logic for "Save" or "Save & Generate"
-		
-		-- Check if we are in "Save & Generate" mode
-		-- This happens if we have generated elements (AMT.hElements) but the user has selected a NEW base element
-		local isSaveAndGenerate = false
-		if AMT.hElements and #AMT.hElements > 0 and AMT.selectedElement ~= AMT.hElements[1].source then
-			isSaveAndGenerate = true
-			outputDebugString("AMT: Detected Save & Generate mode")
-		end
+		-- Logic for "Save" - just saves the current loop, resets fields, and goes back to generate mode
+		-- The user can then configure the next loop and click "Generate" manually
 
 		outputDebugString("AMT: saving...")
 		if not AMT.hElements or #AMT.hElements == 0 then
@@ -277,7 +270,7 @@ function startGenerating()
 		tData = {}
 		AMT.hElements = {}
 
-		-- Reset rotation fields
+		-- Reset ALL rotation fields to 0
 		guiSetText(AMT.gui.additional_rotX_field, "0")
 		guiSetText(AMT.gui.additional_rotY_field, "0")
 		guiSetText(AMT.gui.additional_rotZ_field, "0")
@@ -285,7 +278,7 @@ function startGenerating()
 		guiSetText(AMT.gui.conrot_rotY_field, "0")
 		guiSetText(AMT.gui.conrot_rotZ_field, "0")
 
-		-- Re-enable and reset twist fields on Save
+		-- Re-enable and reset twist/curve rotation fields on Save
 		guiSetEnabled(AMT.gui.twist_rotX_field, true)
 		guiSetEnabled(AMT.gui.twist_rotY_field, true)
 		guiSetEnabled(AMT.gui.twist_rotZ_field, true)
@@ -295,11 +288,5 @@ function startGenerating()
 
 		-- Switch back to preview/generate mode (updates button text and highlighting)
 		GUIBuilder.setGenerateMode(true)
-		
-		-- If we were in "Save & Generate" mode, immediately trigger generation for the new element
-		if isSaveAndGenerate then
-			outputDebugString("AMT: Triggering immediate generation for new element...")
-			startGenerating()
-		end
 	end
 end

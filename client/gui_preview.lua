@@ -37,8 +37,8 @@ function previewUpdate()
 	-- Defensive guard: only generate previews when Generator window (1) is visible
 	if AMT.currentWindow ~= 1 or not guiGetVisible(AMT.gui[AMT.currentWindow].window) then return end
 	
-	-- NEW: Don't show preview if we're in Save mode on the SAME base object
-	-- Preview should only show when selecting a DIFFERENT object (for Save & Generate)
+	-- Don't show preview if we're in Save mode on the SAME base object
+	-- Preview should only show when in generate mode OR when selecting a DIFFERENT object during save mode
 	if not AMT.generate and AMT.hElements and #AMT.hElements > 0 then
 		if AMT.selectedElement == AMT.hElements[1].source then
 			-- We're still on the original object, don't show preview
@@ -86,8 +86,10 @@ function previewGeneratorCoroutine()
 		guiSetProperty(AMT.gui.objects_times_field, "NormalTextColour", "FFFF0000")
 		guiSetProperty(AMT.gui.gen_button, "NormalTextColour", "FFFF0000")
 		
-		-- Change button text
-		guiSetText(AMT.gui.gen_button, "Generate (High Count!)")
+		-- Change button text only if in generate mode
+		if AMT.generate then
+			guiSetText(AMT.gui.gen_button, "Generate (High Count!)")
+		end
 	else
 		-- Reset to default colors
 		guiSetProperty(AMT.gui.objects_label, "NormalTextColour", "FFFFFFFF") -- White label
@@ -95,8 +97,10 @@ function previewGeneratorCoroutine()
 		guiSetProperty(AMT.gui.objects_times_field, "NormalTextColour", "FF000000") -- Black text for edit
 		guiSetProperty(AMT.gui.gen_button, "NormalTextColour", "FFFFFFFF") -- White text for button
 		
-		-- Reset button text
-		guiSetText(AMT.gui.gen_button, "Generate!")
+		-- Reset button text only if in generate mode
+		if AMT.generate then
+			guiSetText(AMT.gui.gen_button, "Generate!")
+		end
 	end
 	
 	-- Hide the "Show all" button as it's deprecated by Smart Sampling
@@ -261,7 +265,7 @@ addEventHandler("onClientRender", root, function()
 	-- Defensive guard: only render when Generator window (1) is visible and preview is active
 	if AMT.currentWindow ~= 1 or not guiGetVisible(AMT.gui[AMT.currentWindow].window) then return end
 	
-	-- NEW: Don't render preview path if we're in Save mode on the SAME base object
+	-- Don't render preview path if we're in Save mode on the SAME base object
 	if not AMT.generate and AMT.hElements and #AMT.hElements > 0 then
 		if AMT.selectedElement == AMT.hElements[1].source then
 			return

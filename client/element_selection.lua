@@ -285,22 +285,16 @@ function()
 		end
 		AMT.isHoveringArrow = isHoveringAny
 
-		-- NEW: Check for "Save & Generate" condition
-		-- If we are in "Save" mode (AMT.generate == false) and have generated elements
+		-- Check if we're in Save mode - ensure button stays "Save" and handle preview
 		if not AMT.generate and AMT.hElements and #AMT.hElements > 0 then
+			-- Keep button text as "Save" regardless of which object is selected
 			local currentText = guiGetText(AMT.gui.gen_button)
-			-- If the currently selected element is DIFFERENT from the one we generated off of
-			if AMT.selectedElement ~= AMT.hElements[1].source then
-				-- We are in "Save & Generate" mode
-				if currentText ~= "Save & Generate" then
-					guiSetText(AMT.gui.gen_button, "Save & Generate")
-				end
-			else
-				-- We are still on the original element, so just "Save"
-				if currentText ~= "Save" then
-					guiSetText(AMT.gui.gen_button, "Save")
-				end
-				-- Clear any previews from other objects
+			if currentText ~= "Save" then
+				guiSetText(AMT.gui.gen_button, "Save")
+			end
+			
+			if AMT.selectedElement == AMT.hElements[1].source then
+				-- We are still on the original element - clear any stale previews
 				clearPreviews()
 			end
 		end
