@@ -15,6 +15,7 @@
 	<script src="client/gui_preview.lua" type="client" />
 	<script src="client/element_manipulation.lua" type="client" />
 	<script src="client/gui_events.lua" type="client" />
+	<script src="client/duplicator_preview.lua" type="client" />
 
 	<!-- Server modules -->
 	<script src="server/generation.lua" type="server" />

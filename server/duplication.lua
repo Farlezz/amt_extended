@@ -1,12 +1,23 @@
 -- server/duplication.lua
 -- Element duplication logic
 
-addEvent("onClientRequestDuplicate", true)
-addEventHandler("onClientRequestDuplicate", getRootElement(),
+addEvent("onAMTExtendedRequestDuplicate", true)
+addEventHandler("onAMTExtendedRequestDuplicate", getRootElement(),
 function(element1, element2, copies)
 	-- Validate elements exist
 	if not isElement(element1) or not isElement(element2) then
 		outputChatBox("[AMT ERROR]: Invalid elements selected.", source, 255, 25, 25, true)
+		return
+	end
+
+	-- Validate copies count (prevent server crashes from excessive requests)
+	if not copies or copies <= 0 then
+		outputChatBox("[AMT ERROR]: Invalid copy count.", source, 255, 25, 25, true)
+		return
+	end
+	if copies > MAX_SERVER_GENERATION_OBJECTS then
+		outputDebugString("AMT ERROR: Duplication count exceeds server limit: " .. copies .. " > " .. MAX_SERVER_GENERATION_OBJECTS, 1)
+		outputChatBox("[AMT ERROR]: Too many copies requested (" .. copies .. "). Maximum is " .. MAX_SERVER_GENERATION_OBJECTS .. ".", source, 255, 25, 25, true)
 		return
 	end
 

@@ -11,6 +11,16 @@ local lastPreviewRotation = nil
 -- Track if mouse is hovering over an arrow to prevent editor selection conflict
 AMT.isHoveringArrow = false
 
+-- Mapping for arrow labels
+local ARROW_LABELS = {
+	[1] = "UP",
+	[2] = "DOWN",
+	[3] = "LEFT",
+	[4] = "RIGHT",
+	[5] = "FORWARD",
+	[6] = "BACKWARD"
+}
+
 -- Centralized function to clear arrow screen coordinates (invalidates stale click data)
 function clearArrowCoordinates()
 	if AMT.selectedElement and AMT.img[AMT.selectedElement] then
@@ -26,6 +36,8 @@ function clearArrowCoordinates()
 end
 
 function setWindow(window)
+	local previousWindow = AMT.currentWindow
+	
 	for i = 1, #AMT.gui do
 		if(AMT.gui[i].window ~= nil)then
 			if(i == window)then
@@ -36,10 +48,20 @@ function setWindow(window)
 		end
 	end
 	AMT.currentWindow = window
-	-- Clean up previews and arrows when switching away from Generator window
-	if(AMT.currentWindow ~= 1)then
-		clearPreviews()
-		clearArrowCoordinates()
+	-- Clean up previews and arrows when switching windows (shared between Generator and Duplicator)
+	clearPreviews()
+	clearArrowCoordinates()
+	
+	-- Reset duplicator element selection when switching away from duplicator
+	if previousWindow == 2 and window ~= 2 then
+		AMT.duplicateElement[1] = nil
+		AMT.duplicateElement[2] = nil
+		if AMT.gui.element1 and isElement(AMT.gui.element1) then
+			guiSetText(AMT.gui.element1, "Select 1st element")
+		end
+		if AMT.gui.element2 and isElement(AMT.gui.element2) then
+			guiSetText(AMT.gui.element2, "Select 2nd element")
+		end
 	end
 end
 
@@ -110,12 +132,28 @@ function()
 			AMT.img[AMT.selectedElement] = {}
 			AMT.img[AMT.selectedElement].dist = 50 -- distance from object to image
 
-			-- Reverted to hardcoded defaults (like gute_amt)
-			AMT.img[AMT.selectedElement].selectedCenter = AMT.img.selectedCenter
-			AMT.img[AMT.selectedElement].selectedDir = AMT.img.selectedDir
+			-- Check for specific object model overrides
+			local model = getElementModel(AMT.selectedElement)
+			local specialArrow = AMT.SPECIAL_ARROW_MODELS[model]
+			if specialArrow then
+				-- Use predefined arrow directions for this model
+				AMT.img[AMT.selectedElement].selectedCenter = specialArrow.center
+				AMT.img[AMT.selectedElement].selectedDir = specialArrow.dir
+			else
+				-- Standard defaults (Top/Forward)
+				AMT.img[AMT.selectedElement].selectedCenter = AMT.img.selectedCenter
+				AMT.img[AMT.selectedElement].selectedDir = AMT.img.selectedDir
+			end
+
+			-- Reset twist fields when selecting a new object (User Request)
+			if AMT.gui.twist_rotX_field then
+				guiSetText(AMT.gui.twist_rotX_field, "0")
+				guiSetText(AMT.gui.twist_rotY_field, "0")
+				guiSetText(AMT.gui.twist_rotZ_field, "0")
+			end
 
 			-- Update curve rotation axis highlighting based on initial direction selection
-			GUIBuilder.updateCurveAxisHighlight(AMT.img.selectedDir)
+			GUIBuilder.updateCurveAxisHighlight(AMT.img[AMT.selectedElement].selectedDir)
 
 			-- 1: UP
 			-- 2: DOWN
@@ -224,8 +262,21 @@ function()
 							local centerX = AMT.img[s][index].x + AMT.img[s][index].diameter/2
 							local centerY = AMT.img[s][index].y + AMT.img[s][index].diameter/2
 							local dist = math.sqrt((cx - centerX)^2 + (cy - centerY)^2)
+							
 							if dist <= AMT.img[s][index].diameter/2 then
 								isHoveringAny = true
+								-- NEW: Draw hover label
+								local labelText = ARROW_LABELS[index]
+								if labelText then
+									local textWidth = dxGetTextWidth(labelText, 1, "default-bold")
+									local textX = centerX - textWidth/2
+									local textY = centerY - AMT.img[s][index].diameter/2 - 15
+									
+									-- Draw text background for readability
+									dxDrawRectangle(textX - 2, textY - 2, textWidth + 4, 16, tocolor(0,0,0,180))
+									-- Draw label text
+									dxDrawText(labelText, textX, textY, textX+textWidth, textY+15, tocolor(255,255,255,255), 1, "default-bold")
+								end
 							end
 						end
 					end
