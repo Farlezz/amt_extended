@@ -1,5 +1,5 @@
 <meta>
-	<info author="Arezu" version="1.0.0" type="script" name="AMT Extended" description="Arezu's Mapping Toolbox - Extended Edition" />
+	<info author="Arezu" version="1.1.0" type="script" name="AMT Extended" description="Arezu's Mapping Toolbox - Extended Edition" />
 
 	<!-- Shared modules (used by both client and server) -->
 	<script src="shared/constants.lua" type="shared" />
@@ -15,6 +15,7 @@
 	<script src="client/gui_preview.lua" type="client" />
 	<script src="client/element_manipulation.lua" type="client" />
 	<script src="client/gui_events.lua" type="client" />
+	<script src="client/duplicator_preview.lua" type="client" />
 
 	<!-- Server modules -->
 	<script src="server/generation.lua" type="server" />

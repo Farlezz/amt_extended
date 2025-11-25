@@ -236,6 +236,12 @@ function startGenerating()
 		-- Pass the CALCULATED rotation (rotX, rotY, rotZ) which includes the twist if applicable
 		triggerServerEvent("onRequestGenerate", getLocalPlayer(), AMT.selectedElement, rotX, rotY, rotZ, loops, radius, objects, offset, AMT.img[AMT.selectedElement].selectedCenter, AMT.img[AMT.selectedElement].selectedDir, addX, addY, addZ, conX, conY, conZ, nil, nil, nil, isCurvedLoop, origRotX, origRotY, origRotZ, twistAmountX, twistAmountY, twistAmountZ)
 
+		-- Disable twist fields after generating (lock the curved rotation values)
+		-- Values are kept visible but not editable until Save
+		guiSetEnabled(AMT.gui.twist_rotX_field, false)
+		guiSetEnabled(AMT.gui.twist_rotY_field, false)
+		guiSetEnabled(AMT.gui.twist_rotZ_field, false)
+
 		-- Switch to edit/save mode (updates button text and highlighting)
 		-- GUIBuilder.setGenerateMode(false) -- MOVED: Now handled in sendBackRequestedElements
 		guiSetEnabled(AMT.gui.gen_button, false)
@@ -278,6 +284,14 @@ function startGenerating()
 		guiSetText(AMT.gui.conrot_rotX_field, "0")
 		guiSetText(AMT.gui.conrot_rotY_field, "0")
 		guiSetText(AMT.gui.conrot_rotZ_field, "0")
+
+		-- Re-enable and reset twist fields on Save
+		guiSetEnabled(AMT.gui.twist_rotX_field, true)
+		guiSetEnabled(AMT.gui.twist_rotY_field, true)
+		guiSetEnabled(AMT.gui.twist_rotZ_field, true)
+		guiSetText(AMT.gui.twist_rotX_field, "0")
+		guiSetText(AMT.gui.twist_rotY_field, "0")
+		guiSetText(AMT.gui.twist_rotZ_field, "0")
 
 		-- Switch back to preview/generate mode (updates button text and highlighting)
 		GUIBuilder.setGenerateMode(true)

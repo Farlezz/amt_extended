@@ -1,7 +1,7 @@
 -- shared/constants.lua
 -- Global constants used across the application
 
-VERSION = "1.0.0"  -- Keep in sync with meta.xml <info> tag
+VERSION = "1.1.0"  -- Keep in sync with meta.xml <info> tag
 PI = math.pi
 FOV = 0.01  -- Size of image relative to 3d distance
 MIN_RADIUS = 1  -- Minimal allowed radius to generate with
@@ -18,11 +18,18 @@ AMT.KEY = {}
 AMT.hElements = {}
 AMT.elementList = {}
 AMT.duplicateElement = {}
-AMT.previewElements = {}
+AMT.previewElements = {}  -- Shared preview elements (used by both Generator and Duplicator)
 AMT.originalBaseRotation = {x = 0, y = 0, z = 0}
 AMT.VALID_DUPLICATION_TYPES = {
 	["object"] = true,
 	["vehicle"] = true,
 	["ped"] = true
+}
+
+-- Models with special default arrow directions
+-- center = Red arrow (selectedCenter), dir = Green arrow (selectedDir)
+AMT.SPECIAL_ARROW_MODELS = {
+	[7657] = { center = 6, dir = 1 },  -- Backward, Up
+	[982]  = { center = 6, dir = 1 }   -- Backward, Up
 }
 

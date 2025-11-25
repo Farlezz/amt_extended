@@ -215,7 +215,7 @@ function()
 	-- Visibility Watcher: Automatically handle preview state when window opens/closes
 	-- This replaces the manual handlers and fixes the bug where clicking the background destroyed previews
 	local wasVisible = false
-	addEventHandler("onClientRender", root, function()
+	addEventHandler("onClientRender", getRootElement(), function()
 		if not AMT.gui[1] or not isElement(AMT.gui[1].window) then return end
 		
 		local isVisible = guiGetVisible(AMT.gui[1].window)
@@ -224,7 +224,14 @@ function()
 			if isVisible then
 				-- Window just opened
 				if AMT.currentWindow == 1 then
-					previewUpdate()
+					-- Only show preview if editor has an element selected
+					local editorElement = exports.editor_main:getSelectedElement()
+					if editorElement and editorElement ~= false and getElementType(editorElement) == "object" then
+						previewUpdate()
+					else
+						-- No element selected in editor, clear any stale selection
+						clearPreviews()
+					end
 				end
 			else
 				-- Window just closed
@@ -259,6 +266,7 @@ function()
 	local amount_width = 75
 	local amount_height = 20
 	AMT.gui.dup_amount = guiCreateEdit(AMT.gui[2].window_width/2 - amount_width/2, 190, amount_width, amount_height, "5", false, AMT.gui[2].window)
+	guiSetProperty(AMT.gui.dup_amount, "ValidationString", "^[0-9]*$") -- Only allow integers
 	AMT.gui.dup_amount_title = guiCreateLabel(AMT.gui[2].window_width/2 - amount_width - 10, 190, 100, 25, "Copies: ", false, AMT.gui[2].window)
 	guiSetEnabled(AMT.gui.dup_amount_title, false)
 
@@ -267,7 +275,31 @@ function()
 		function()
 			local copies = tonumber(guiGetText(AMT.gui.dup_amount))
 			if(isElement(AMT.duplicateElement[1]) and isElement(AMT.duplicateElement[2]) and copies)then
-				triggerServerEvent("onClientRequestDuplicate", getLocalPlayer(), AMT.duplicateElement[1], AMT.duplicateElement[2], copies)
+				-- Clear preview before triggering actual duplication
+				clearDuplicatorPreview()
+				-- Get current client-side positions/rotations (may differ from server if moved in editor)
+				local px1, py1, pz1 = getElementPosition(AMT.duplicateElement[1])
+				local rx1, ry1, rz1 = getElementRotation(AMT.duplicateElement[1])
+				local px2, py2, pz2 = getElementPosition(AMT.duplicateElement[2])
+				local rx2, ry2, rz2 = getElementRotation(AMT.duplicateElement[2])
+				local model1 = getElementModel(AMT.duplicateElement[1])
+				local model2 = getElementModel(AMT.duplicateElement[2])
+				local elementData = {
+					element1 = AMT.duplicateElement[1],
+					element2 = AMT.duplicateElement[2],
+					pos1 = {x = px1, y = py1, z = pz1},
+					rot1 = {x = rx1, y = ry1, z = rz1},
+					pos2 = {x = px2, y = py2, z = pz2},
+					rot2 = {x = rx2, y = ry2, z = rz2},
+					model1 = model1,
+					model2 = model2
+				}
+				triggerServerEvent("onAMTExtendedRequestDuplicate", getLocalPlayer(), elementData, copies)
+				-- Clear element selection for fresh state
+				AMT.duplicateElement[1] = nil
+				AMT.duplicateElement[2] = nil
+				guiSetText(AMT.gui.element1, "Select 1st element")
+				guiSetText(AMT.gui.element2, "Select 2nd element")
 			elseif(not copies)then
 				outputChatBox("#FF2525[AMT ERROR]: #FFFFFFCopies value is not a valid number.", 255, 25, 25, true)
 			else

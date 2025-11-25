@@ -16,6 +16,8 @@ function()
 	if(AMT.hElements[1] ~= nil)then
 		triggerServerEvent("requestDestroyElements", getLocalPlayer(), AMT.hElements)
 	end
+	-- Clean up all preview elements (shared between Generator and Duplicator)
+	clearPreviews()
 end)
 
 addCommandHandler("des",
