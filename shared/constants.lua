@@ -1,7 +1,7 @@
 -- shared/constants.lua
 -- Global constants used across the application
 
-VERSION = "1.0.0"  -- Keep in sync with meta.xml <info> tag
+VERSION = "1.1.0"  -- Keep in sync with meta.xml <info> tag
 PI = math.pi
 FOV = 0.01  -- Size of image relative to 3d distance
 MIN_RADIUS = 1  -- Minimal allowed radius to generate with
