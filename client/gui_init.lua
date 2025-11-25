@@ -277,7 +277,24 @@ function()
 			if(isElement(AMT.duplicateElement[1]) and isElement(AMT.duplicateElement[2]) and copies)then
 				-- Clear preview before triggering actual duplication
 				clearDuplicatorPreview()
-				triggerServerEvent("onAMTExtendedRequestDuplicate", getLocalPlayer(), AMT.duplicateElement[1], AMT.duplicateElement[2], copies)
+				-- Get current client-side positions/rotations (may differ from server if moved in editor)
+				local px1, py1, pz1 = getElementPosition(AMT.duplicateElement[1])
+				local rx1, ry1, rz1 = getElementRotation(AMT.duplicateElement[1])
+				local px2, py2, pz2 = getElementPosition(AMT.duplicateElement[2])
+				local rx2, ry2, rz2 = getElementRotation(AMT.duplicateElement[2])
+				local model1 = getElementModel(AMT.duplicateElement[1])
+				local model2 = getElementModel(AMT.duplicateElement[2])
+				local elementData = {
+					element1 = AMT.duplicateElement[1],
+					element2 = AMT.duplicateElement[2],
+					pos1 = {x = px1, y = py1, z = pz1},
+					rot1 = {x = rx1, y = ry1, z = rz1},
+					pos2 = {x = px2, y = py2, z = pz2},
+					rot2 = {x = rx2, y = ry2, z = rz2},
+					model1 = model1,
+					model2 = model2
+				}
+				triggerServerEvent("onAMTExtendedRequestDuplicate", getLocalPlayer(), elementData, copies)
 				-- Clear element selection for fresh state
 				AMT.duplicateElement[1] = nil
 				AMT.duplicateElement[2] = nil

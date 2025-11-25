@@ -3,7 +3,16 @@
 
 addEvent("onAMTExtendedRequestDuplicate", true)
 addEventHandler("onAMTExtendedRequestDuplicate", getRootElement(),
-function(element1, element2, copies)
+function(elementData, copies)
+	-- Validate element data
+	if not elementData or type(elementData) ~= "table" then
+		outputChatBox("[AMT ERROR]: Invalid element data.", source, 255, 25, 25, true)
+		return
+	end
+
+	local element1 = elementData.element1
+	local element2 = elementData.element2
+
 	-- Validate elements exist
 	if not isElement(element1) or not isElement(element2) then
 		outputChatBox("[AMT ERROR]: Invalid elements selected.", source, 255, 25, 25, true)
@@ -29,14 +38,15 @@ function(element1, element2, copies)
 		return
 	end
 
-	local px, py, pz = getElementPosition(element1)
-	local rx, ry, rz = getElementRotation(element1)
-	local px2, py2, pz2 = getElementPosition(element2)
-	local rx2, ry2, rz2 = getElementRotation(element2)
+	-- Use client-provided positions/rotations (accounts for unsaved editor movements)
+	local px, py, pz = elementData.pos1.x, elementData.pos1.y, elementData.pos1.z
+	local rx, ry, rz = elementData.rot1.x, elementData.rot1.y, elementData.rot1.z
+	local px2, py2, pz2 = elementData.pos2.x, elementData.pos2.y, elementData.pos2.z
+	local rx2, ry2, rz2 = elementData.rot2.x, elementData.rot2.y, elementData.rot2.z
 	local posDiffX, posDiffY, posDiffZ = px2 - px, py2 - py, pz2 - pz
 	local rotDiffX, rotDiffY, rotDiffZ = rx2 - rx, ry2 - ry, rz2 - rz
-	local model1 = getElementModel(element1)
-	local model2 = getElementModel(element2)
+	local model1 = elementData.model1
+	local model2 = elementData.model2
 	local elementList = {}
 
 	-- Performance optimization: Cache element counts at start for both models
