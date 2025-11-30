@@ -55,18 +55,22 @@ function(elementData, copies)
 	local elementCount2 = getElementCount(element2)
 
 	for i = 1, copies do
-		local newElement = exports.edf:edfCloneElement(element1)
+		local useSecond = (i % 2 == 0) -- Preserve original ordering: first = element1, second = element2
+		local sourceElement = useSecond and element2 or element1
+		local newElement = exports.edf:edfCloneElement(sourceElement)
+		if not newElement then
+			outputChatBox("[AMT ERROR]: Failed to duplicate element.", source, 255, 25, 25, true)
+			break
+		end
 		local currentModel, currentCount
-		if(i%2 == 0)then
-			setElementModel(newElement, model1)
-			elementCount1 = elementCount1 + 1
-			currentModel = model1
-			currentCount = elementCount1
-		else
-			setElementModel(newElement, model2)
+		if useSecond then
 			elementCount2 = elementCount2 + 1
 			currentModel = model2
 			currentCount = elementCount2
+		else
+			elementCount1 = elementCount1 + 1
+			currentModel = model1
+			currentCount = elementCount1
 		end
 		local newID = "AMT "..currentModel.." ("..currentCount..")"
 		exports.edf:edfSetElementProperty(newElement, "id", newID)

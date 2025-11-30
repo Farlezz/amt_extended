@@ -173,21 +173,17 @@ function()
 end)
 
 function alterGeneration(element)
-	local rx, ry, rz = 0, 0, 0
-	rx = tonumber(guiGetText(AMT.gui.additional_rotX_field))
-	ry = tonumber(guiGetText(AMT.gui.additional_rotY_field))
-	rz = tonumber(guiGetText(AMT.gui.additional_rotZ_field))
-	conrx = tonumber(guiGetText(AMT.gui.conrot_rotX_field))
-	conry = tonumber(guiGetText(AMT.gui.conrot_rotY_field))
-	conrz = tonumber(guiGetText(AMT.gui.conrot_rotZ_field))
+	local rx = tonumber(guiGetText(AMT.gui.additional_rotX_field))
+	local ry = tonumber(guiGetText(AMT.gui.additional_rotY_field))
+	local rz = tonumber(guiGetText(AMT.gui.additional_rotZ_field))
+	local conrx = tonumber(guiGetText(AMT.gui.conrot_rotX_field))
+	local conry = tonumber(guiGetText(AMT.gui.conrot_rotY_field))
+	local conrz = tonumber(guiGetText(AMT.gui.conrot_rotZ_field))
 	if not rx or not ry or not rz or not conrx or not conry or not conrz or not AMT.hElements or #AMT.hElements == 0 then return end
-	conrx = conrx/#AMT.hElements
-	conry = conry/#AMT.hElements
-	conrz = conrz/#AMT.hElements
+	conrx = conrx / #AMT.hElements
+	conry = conry / #AMT.hElements
+	conrz = conrz / #AMT.hElements
 
-	-- For curved loops, use the original base rotation (before twist was applied)
-	-- For regular loops, use the stored rotation from generation
-	local rotX, rotY, rotZ
 	-- For curved loops, use the original base rotation (before twist was applied)
 	-- For regular loops, use the stored rotation from generation
 	local rotX, rotY, rotZ

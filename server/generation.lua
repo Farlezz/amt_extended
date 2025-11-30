@@ -21,6 +21,12 @@ function(element, rotX, rotY, rotZ, loops, radius, objects, offset, center, dir,
 		triggerClientEvent(source, "onGenerationFailed", source)
 		return
 	end
+	if totalObjects <= 0 then
+		outputDebugString("AMT ERROR: Object count is zero after loops/objects calculation", 1)
+		outputChatBox("[AMT ERROR]: Resulting object count is zero. Increase loops or objects.", source, 255, 25, 25, true)
+		triggerClientEvent(source, "onGenerationFailed", source)
+		return
+	end
 
 	-- Validate curved loop parameters if curved loop is enabled
 	if isCurvedLoop and (not twistX or not twistY or not twistZ) then
@@ -35,9 +41,9 @@ function(element, rotX, rotY, rotZ, loops, radius, objects, offset, center, dir,
 	local off = 0
 	local inter = 0
 	local relOff = offset/objects
-	conX = conX / math.floor(objects*loops)
-	conY = conY / math.floor(objects*loops)
-	conZ = conZ / math.floor(objects*loops)
+	conX = conX / totalObjects
+	conY = conY / totalObjects
+	conZ = conZ / totalObjects
 
 	-- Performance optimization: Cache element count at start instead of calling getElementCount() for every object
 	local elementModel = getElementModel(element)
@@ -100,7 +106,7 @@ function(element, rotX, rotY, rotZ, loops, radius, objects, offset, center, dir,
 				elements[index].offsetDirY = offsetDirY
 				elements[index].offsetDirZ = offsetDirZ
 	
-				if(inter >= math.floor(objects*loops))then
+				if(inter >= totalObjects)then
 					break
 				end
 				inter = inter + 1

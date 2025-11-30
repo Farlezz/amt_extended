@@ -37,9 +37,12 @@ end
 function updateAutocount()
 	if(AMT.selectedElement == nil or not guiCheckBoxGetSelected(AMT.gui.objects_auto_box))then return end
 	local radius = tonumber(guiGetText(AMT.gui.radius_field))
-	local objects = tonumber(guiGetText(AMT.gui.objects_field))
 	local offsetValue = tonumber(guiGetText(AMT.gui.offset_field))
-	if not radius or not objects or not offsetValue or objects == 0 then return end
+	if not radius or radius <= 0 or not offsetValue then return end
+	local objects = tonumber(guiGetText(AMT.gui.objects_field)) or 0
+	if(objects <= 0)then
+		objects = 1 -- Prevent division by zero when recovering from invalid autocount state
+	end
 	local offset = offsetValue / objects
 	local side = "x"
 	local center = AMT.img[AMT.selectedElement].selectedCenter
@@ -136,8 +139,11 @@ function updateAutocount()
 	end
 	local length = getElementLength(AMT.selectedElement, side)
 	objects = math.ceil(length*radius)
+	if(objects < 1)then
+		objects = 1
+	end
 	guiSetText(AMT.gui.objects_field, tostring(objects))
-	outputDebugString("AMT: autocount objects set automaticly to: "..tostring(objects))
+	outputDebugString("AMT: autocount objects set automatically to: "..tostring(objects))
 	resetPreviewState()
 	previewUpdate()
 end
@@ -178,12 +184,14 @@ function startGenerating()
 		end
 		local loops = tonumber(guiGetText(AMT.gui.loops_field))
 		local radius = tonumber(guiGetText(AMT.gui.radius_field))
-		local objects = tonumber(guiGetText(AMT.gui.objects_field))*tonumber(guiGetText(AMT.gui.objects_times_field))
+		local objectsValue = tonumber(guiGetText(AMT.gui.objects_field))
+		local timesValue = tonumber(guiGetText(AMT.gui.objects_times_field))
 		local offset = tonumber(guiGetText(AMT.gui.offset_field))
-		if not loops or not radius or not objects or not offset then
+		if not loops or not radius or not objectsValue or not timesValue or not offset then
 			outputChatBox("[AMT ERROR]: error in number value in edit fields!", 255, 25, 25)
 			return false
 		end
+		local objects = objectsValue * timesValue
 		--radius = math.floor(radius)
 		if(radius < MIN_RADIUS)then
 			outputChatBox("[AMT ERROR]: Radius is less than minimal allowed radius ("..MIN_RADIUS..")", 255, 25, 25)
