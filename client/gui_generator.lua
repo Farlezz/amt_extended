@@ -35,7 +35,7 @@ end
 
 -- Update autocount object edit field if its enabled
 function updateAutocount()
-	if(AMT.selectedElement == nil or not guiCheckBoxGetSelected(AMT.gui.objects_auto_box))then return end
+	if(not isElement(AMT.selectedElement) or not guiCheckBoxGetSelected(AMT.gui.objects_auto_box))then return end
 	local radius = tonumber(guiGetText(AMT.gui.radius_field))
 	local offsetValue = tonumber(guiGetText(AMT.gui.offset_field))
 	if not radius or radius <= 0 or not offsetValue then return end
@@ -149,9 +149,22 @@ function updateAutocount()
 end
 
 function getElementLength(element, side)
+	-- Validate element before trying to get bounding box
+	if not element or not isElement(element) then
+		outputDebugString("AMT: getElementLength called with invalid element", 2)
+		return 0
+	end
+	
 	side = string.lower(tostring(side))
 	local length = 0
 	local minX, minY, minZ, maxX, maxY, maxZ = getElementBoundingBox(element)
+	
+	-- Check if getElementBoundingBox returned valid values
+	if not minX or not minY or not minZ or not maxX or not maxY or not maxZ then
+		outputDebugString("AMT: getElementBoundingBox failed for element", 2)
+		return 0
+	end
+	
 	minX, minY, minZ, maxX, maxY, maxZ = math.abs(minX), math.abs(minY), math.abs(minZ), math.abs(maxX), math.abs(maxY), math.abs(maxZ)
 	--local x, y, z = (maxX + minX)/2, (maxY + minY)/2, (maxZ + minZ)/2
 	if(side == "x")then

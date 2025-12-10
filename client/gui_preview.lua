@@ -62,7 +62,7 @@ function previewGeneratorCoroutine()
 	local times = tonumber(guiGetText(AMT.gui.objects_times_field))
 	local loops = tonumber(guiGetText(AMT.gui.loops_field))
 	local selected = AMT.selectedElement
-	if not offset or not objects or not radius or not loops or not times or times <= 0 or loops <= 0 or radius <= 0 or objects <= 0 or not selected then return end
+	if not offset or not objects or not radius or not loops or not times or times <= 0 or loops <= 0 or radius <= 0 or objects <= 0 or not isElement(selected) then return end
 	objects = math.floor(objects*times)
 
 	-- Additional check after multiplication: prevent division by zero
@@ -135,9 +135,12 @@ function previewGeneratorCoroutine()
 
 	-- Get object dimensions for width visualization
 	local minX, minY, minZ, maxX, maxY, maxZ = getElementBoundingBox(selected)
-	local halfWidth = (maxX - minX) / 2
-	-- Ensure we have a valid width (fallback for some objects)
-	if halfWidth < 0.1 then halfWidth = DEFAULT_HALF_WIDTH end
+	local halfWidth = DEFAULT_HALF_WIDTH
+	if minX and maxX then
+		halfWidth = (maxX - minX) / 2
+		-- Ensure we have a valid width (fallback for some objects)
+		if halfWidth < 0.1 then halfWidth = DEFAULT_HALF_WIDTH end
+	end
 
 	-- Clear existing preview elements using centralized function
 	clearPreviews()
