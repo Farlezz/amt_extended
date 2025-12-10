@@ -14,7 +14,7 @@ function(element, rotX, rotY, rotZ, loops, radius, objects, offset, center, dir,
 	outputDebugString("AMT: server generating elements.")
 
 	-- Server-side safety check: Prevent excessive object counts
-	local totalObjects = math.floor(objects * loops)
+	local totalObjects = math.ceil(objects * loops)
 	if totalObjects > MAX_SERVER_GENERATION_OBJECTS then
 		outputDebugString("AMT ERROR: Object count exceeds server limit: " .. totalObjects .. " > " .. MAX_SERVER_GENERATION_OBJECTS, 1)
 		outputChatBox("[AMT ERROR]: Too many objects requested (" .. totalObjects .. "). Maximum is " .. MAX_SERVER_GENERATION_OBJECTS .. ".", source, 255, 25, 25, true)
@@ -50,9 +50,19 @@ function(element, rotX, rotY, rotZ, loops, radius, objects, offset, center, dir,
 	local elementCount = getElementCount(element)
 
 	-- Transaction Safety: Wrap generation in pcall to catch errors and cleanup if needed
+	local globalIndex = 0  -- Track total objects like preview does
+	local shouldBreak = false
 	local success, errorMsg = pcall(function()
 		for l = 1, math.ceil(loops) do
 			for i = 1, objects do
+				globalIndex = globalIndex + 1
+				
+				-- FIX: Check BEFORE creating element (matches preview logic at line 222-224)
+				if globalIndex > totalObjects then
+					shouldBreak = true
+					break
+				end
+				
 				local nrx, nry, nrz = rotX, rotY, rotZ
 				local index = #elements + 1
 				elements[index] = {}
@@ -105,12 +115,10 @@ function(element, rotX, rotY, rotZ, loops, radius, objects, offset, center, dir,
 				elements[index].offsetDirX = offsetDirX
 				elements[index].offsetDirY = offsetDirY
 				elements[index].offsetDirZ = offsetDirZ
-	
-				if(inter >= totalObjects)then
-					break
-				end
+
 				inter = inter + 1
 			end
+			if shouldBreak then break end
 		end
 	end)
 
