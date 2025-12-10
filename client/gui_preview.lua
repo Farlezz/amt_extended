@@ -227,6 +227,7 @@ function previewGeneratorCoroutine()
 						AMT.previewElements[index] = createObject(model, px, py, pz, nrx, nry, nrz)
 						setElementDimension(AMT.previewElements[index], getElementDimension(getLocalPlayer()))
 						setElementAlpha(AMT.previewElements[index], 150)
+						setElementCollisionsEnabled(AMT.previewElements[index], false) -- Prevent clicking/selection
 						inter = inter + 1
 					elseif not usePathMode then
 						-- CRITICAL OPTIMIZATION: If not in path mode and limit reached, STOP calculating!
