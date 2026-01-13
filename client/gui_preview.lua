@@ -22,11 +22,7 @@ function clearPreviews()
 	for i = 1, #AMT.previewElements do
 		if(isElement(AMT.previewElements[i]))then
 			detachElements(AMT.previewElements[i])
-			if(exports.editor_main:getSelectedElement() == AMT.previewElements[i])then
-				exports.editor_main:destroySelectedElement()
-			else
-				destroyElement(AMT.previewElements[i])
-			end
+			destroyElement(AMT.previewElements[i])
 		end
 	end
 	AMT.previewElements = {} -- Clear the table to prevent memory leaks
